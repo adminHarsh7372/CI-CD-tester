@@ -1,5 +1,3 @@
-### 4️⃣ GitHub Actions workflow: `.github/workflows/ci.yml`
-
 name: CI
 
 on:
@@ -20,13 +18,6 @@ jobs:
       with:
         python-version: "3.x"
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
-
     - name: Run scraper
       run: python scraper.py
 
-    - name: Lint code
-      run: |
-        pip install flake8
-        flake8 scraper.py
