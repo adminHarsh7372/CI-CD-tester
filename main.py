@@ -1,19 +1,13 @@
-import requests
-from bs4 import BeautifulSoup
-
 def main():
-    url = "https://quotes.toscrape.com/"
-    response = requests.get(url)
-    if response.status_code != 200:
-        print(f"Failed to fetch page: {response.status_code}")
-        return
+    # Dummy "scraping" data
+    quotes = [
+        "The journey of a thousand miles begins with one step — Lao Tzu",
+        "Life is what happens when you're busy making other plans — John Lennon",
+        "Be yourself; everyone else is already taken — Oscar Wilde"
+    ]
 
-    soup = BeautifulSoup(response.text, "html.parser")
-    quotes = soup.select(".quote span.text")
-    authors = soup.select(".quote small.author")
-
-    for quote, author in zip(quotes[:5], authors[:5]):
-        print(f"{quote.text} — {author.text}")
+    for quote in quotes:
+        print(quote)
 
 if __name__ == "__main__":
     main()
