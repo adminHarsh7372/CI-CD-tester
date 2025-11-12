@@ -1,4 +1,4 @@
-name: Scrapy CI Pipeline (Multi-Stage)
+name: Scrapy CI Pipeline
 
 on:
   push:
@@ -7,12 +7,22 @@ on:
     branches: [ main ]
 
 jobs:
-  # 🧩 Stage 1: Setup (optional, just checks out code)
+  # 🧩 Stage 1: Setup
   setup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requirements.txt
 
       # Save workspace for next stage
       - name: Upload workspace
@@ -21,7 +31,7 @@ jobs:
           name: workspace
           path: .
 
-  # 🕷️ Stage 2: Scrape
+  # 🕷️ Stage 2: Run Spider
   scrape:
     needs: setup
     runs-on: ubuntu-latest
@@ -37,24 +47,23 @@ jobs:
         with:
           python-version: "3.11"
 
-      # Install dependencies in this job (required)
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install requirements.txt
 
-      - name: Run Scrapy spider
+      - name: Run Spider
         run: |
           mkdir -p output
-          scrapy crawl quotes -o output/quotes.json
+          python main.py
 
       - name: Upload scraped data
         uses: actions/upload-artifact@v4
         with:
           name: quotes-data
-          path: output/quotes.json
+          path: output/quotes.csv
 
-  # 🧪 Stage 3: Validate
+  # 🧪 Stage 3: Validate Output
   validate:
     needs: scrape
     runs-on: ubuntu-latest
@@ -71,5 +80,4 @@ jobs:
             echo "❌ No data scraped!"
             exit 1
           fi
-          echo "✅ Data file exists and is not empty."
-
+          echo "✅ Data file exists."
