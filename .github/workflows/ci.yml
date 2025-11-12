@@ -23,5 +23,5 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run dummy scraper
+    - name: running scrapy spider 
       run: python main.py
