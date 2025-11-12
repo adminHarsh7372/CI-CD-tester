@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install scrapy
+          pip install -r requirements.txt
 
       # Save workspace for next stage
       - name: Upload workspace
@@ -50,8 +50,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install scrapy
-
+          pip install -r requirements.txt
+          
       - name: Run Spider
         run: |
           mkdir -p output
@@ -76,7 +76,7 @@ jobs:
 
       - name: Verify file integrity
         run: |
-          if [ ! -s output/quotes.json ]; then
+          if [ ! -s output/quotes.csv ]; then
             echo "❌ No data scraped!"
             exit 1
           fi
