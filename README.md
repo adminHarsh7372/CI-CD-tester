@@ -27,16 +27,7 @@ Installation
 
 # Clone the repository
 
-git clone https:/adminHarsh7372/github.com//quotes-scraper.git
-
-
-# Create and activate a virtual environment
-
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# macOS/Linux
-source venv/bin/activate
+git clone https://github.com/adminHarsh7372/CI-CD-tester.git
 
 
 # Install dependencies
