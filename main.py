@@ -1,16 +1,20 @@
-import requests
-from bs4 import BeautifulSoup
+import scrapy
 
-def scrape_example():
-    url = "http://example.com"
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, "html.parser")
-        title = soup.find("h1").text
-        print(f"Page title: {title}")
-    else:
-        print(f"Failed to fetch page, status code: {response.status_code}")
+class QuotesSpider(scrapy.Spider):
+    name = "quotes"
+    start_urls = ["https://quotes.toscrape.com"]
+    page_count = 1
 
-if __name__ == "__main__":
-    scrape_example()
+    def parse(self, response):
+        for quote in response.css("div.quote"):
+            yield {
+                "text": quote.css("span.text::text").get(),
+                "author": quote.css("small.author::text").get(),
+                "tags": quote.css("div.tags a.tag::text").getall(),
+            }
+
+        # Stop after 5 pages
+        next_page = response.css("li.next a::attr(href)").get()
+        if next_page and self.page_count < 5:
+            self.page_count += 1
+            yield response.follow(next_page, callback=self.parse)
